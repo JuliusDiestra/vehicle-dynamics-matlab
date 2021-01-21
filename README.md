@@ -42,5 +42,6 @@ Scripts use for modeling. The idea is to use this function for modeling using Eu
 ## sym-modeling
 
 **car-modelling.m :** Car model using single axle bicycle model using Euler-Lagrange equation. Documentation: documentation/car-modelling/car-modelling.pdf
+
 **semitrailer-modelling.m :** Semitrailer model using single axle bicycle model using Euler-Lagrange equation. Documentation: documentation/semitrailer-modelling/semitrailer-modelling.pdf
 

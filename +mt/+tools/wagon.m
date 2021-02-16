@@ -45,7 +45,7 @@ function [wheels,borders] = wagon(r,psi,param)
     R_EV = [cos(psi),-sin(psi);
             sin(psi),cos(psi)];
     H_EV = [R_EV,r;
-            zeros(1,3),1];
+            zeros(1,2),1];
     % Transformation wheels/axle
     tilde_r1l = H_EV*[r_V1l;1];
     tilde_r1r = H_EV*[r_V1r;1];

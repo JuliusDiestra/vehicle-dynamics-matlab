@@ -227,9 +227,9 @@ fprintf('########################### \n');
 fprintf('Generating code \n')
 fprintf('########################### \n');
 % Nonlinear model files
-matlabFunction(dotX,'File','carNonlinear','Vars',{[vx vy d_psi],[delta Fxw2],[Cy1 Cy2 l1 l2 m J]},'Output',{'dotX'});
-matlabFunction(dotX_vx_constant,'File','carNonlinearVxConstant','Vars',{[vy d_psi],delta,vx,[Cy1 Cy2 l1 l2 m J]},'Output',{'dotX'});
+matlabFunction(dotX,'File','carNonlinear','Vars',{[vx vy d_psi]',[delta Fxw2]',[Cy1 Cy2 l1 l2 m J]'},'Output',{'dotX'});
+matlabFunction(dotX_vx_constant,'File','carNonlinearVxConstant','Vars',{[vy d_psi]',delta,vx,[Cy1 Cy2 l1 l2 m J]'},'Output',{'dotX'});
 % Linear model files
-matlabFunction(dotX_lin,A,B,'File','carLinear','Vars',{[vx vy d_psi],[delta Fxw2],[Cy1 Cy2 l1 l2 m J]},'Output',{'dotX','A','B'});
-matlabFunction(dotX_vx_constant_lin,A_vx,B_vx,'File','carLinearVxConstant','Vars',{[vy d_psi],delta,vx,[Cy1 Cy2 l1 l2 m J]},'Output',{'dotX','A','B'});
+matlabFunction(dotX_lin,A,B,'File','carLinear','Vars',{[vx vy d_psi]',[delta Fxw2]',[Cy1 Cy2 l1 l2 m J]'},'Output',{'dotX','A','B'});
+matlabFunction(dotX_vx_constant_lin,A_vx,B_vx,'File','carLinearVxConstant','Vars',{[vy d_psi]',delta,vx,[Cy1 Cy2 l1 l2 m J]'},'Output',{'dotX','A','B'});
 

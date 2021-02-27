@@ -1,4 +1,3 @@
-
 % Import our packaget Marsvin Tech library
 clear;clc;
 import mt.*                 % Import our package
@@ -29,13 +28,21 @@ lr = 2;
 w = 2;
 param = [l1 l2 w lf lr];
 % constant steering 
-delta_v = pi/20;
+% delta_v = 35*pi/180;
 % Initial conditions
 X_current = [0,0]';
 r = [0 0]';
 psi = 0;
 trajectory = [];
+delta_c = 35*pi/180;
+delta_v = zeros(1,120);
 for j = 1:120
+    time = (j-1)*Ts;
+    if time < 4.5
+        delta_v(j) = delta_c*sin(2*pi*0.5*j*Ts);
+    else
+        delta_v(j) = delta_c;
+    end
     % Plot car
     figure(1)
     hold off;
@@ -43,10 +50,19 @@ for j = 1:120
     hold on;
     trajectory = [trajectory r];
     plot(trajectory(1,:),trajectory(2,:));
-    xlim([-30 30])
-    ylim([-15 45])
+    xlim([-5 55])
+    ylim([-5 55])
+    xlabel('x-axis [m]','FontSize',14)
+    ylabel('y-axis [m]','FontSize',14)
+    title('Car Position : Constant longitudinal velocity','FontSize',14)
+    figure(2)
+    plot(time,delta_v(j),'*')
+    title('Steering','FontSize',14)
+    xlabel('time [s]','FontSize',14)
+    ylabel('Steering [rad]','FontSize',14)
+    hold on
     % Calculate next state
-    X_next = mt.tools.rk4(f,X_current,delta_v,Ts);
+    X_next = mt.tools.rk4(f,X_current,delta_v(j),Ts);
     dr = mt.tools.Rz(psi,2)*[vx;X_next(1)];
     d_psi = X_next(2);
     r = dr*Ts + r;
@@ -54,4 +70,5 @@ for j = 1:120
     X_current = X_next;
     pause(0.2)
 end
-
+figure(2)
+hold off

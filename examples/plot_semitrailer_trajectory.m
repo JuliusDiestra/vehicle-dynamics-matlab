@@ -1,5 +1,6 @@
 % Import our packaget Marsvin Tech library
 clear;clc;
+close all;
 import mt.*                 % Import our package
 %% Semitrailer Parameter
 % m1                : Mass of Unit 1. Unit: [Kg]
@@ -36,62 +37,98 @@ l22 = 1.31 - l21;
 l23 = 2.62 - l21;
 %% 
 params = [Cy11 Cy12 Cy13 Cy21 Cy22 Cy23 l11 l12 l13 l21 l22 l23 l1c1 l2c1 m1 m2 J1 J2]'; 
-syms vy d_psi delta real
-X = [vy d_psi]';
-U = delta;
-vx = 12;
-%%
+syms vy1 d_psi1 d_deltaPsi1 psi1 deltaPsi1 delta11 real
+X = [vy1 d_psi1 d_deltaPsi1 psi1 deltaPsi1]';
+U = delta11;
+vx1 = 15;
+%% State-space equation
 % Define 
-f = @(X,delta) mt.ss.carNonlinearVxConstant(X,delta,vx,params);
-% Loop to plot
+f = @(X,delta11) mt.ss.semitrailerNonlinearVxConstant(X,delta11,vx1,params);
+%% Loop to plot
 Ts = 0.1;
-% param
-l1 = 1.5;
-l2 = 1.5;
-lf = 2;
-lr = 2;
-w = 2;
-param = [l1 l2 w lf lr];
-% constant steering 
-% delta_v = 35*pi/180;
+% Unit 1 - Dimensions
+lf = l11 + 0.5;
+lr = l13 + 0.4;
+w = 3;
+param_unit_one = [l11 l13 w lf lr];
+% Unit 2 - Dimensions
+lf = l2c1;
+lr = l23 + 0.4;
+w = 3;
+param_unit_two = [l2c1 l23 w lf lr];
+%####################
 % Initial conditions
-X_current = [0,0]';
-r = [0 0]';
-psi = 0;
-trajectory = [];
-delta_c = 35*pi/180;
+%####################
+X_current = [0,0,0,0,0]';
+r1 = [0,0]';
+r2 = [-l1c1-l2c1,0]';
+psi1 = 0;
+psi2 = 0;
+deltaPsi1 = 0;
+trajectory_one = [];
+trajectory_two = [];
+trajectory_one = [trajectory_one r1];
+trajectory_two = [trajectory_two r2];
+delta_c = 15*pi/180;
 delta_v = zeros(1,120);
-for j = 1:120
+figure(1)
+set(gcf, 'Position',  [50, 600, 1800, 500])
+%set(gcf, 'Position',  [50, 300, 900, 900])
+hold on
+xlabel('x-axis [m]','FontSize',14)
+ylabel('y-axis [m]','FontSize',14)
+title('Semitrailer Position (Unloaded) : Constant longitudinal velocity','FontSize',18)
+xlim([-15 145])
+ylim([-10 10])
+% xlim([-15 105])
+% ylim([-60 60])
+h1 = mt.tools.plotCar(r1,psi1,param_unit_one,'red');
+h2 = mt.tools.plotCar(r2,psi2,param_unit_two,'blue');
+figure(2)
+hold on;
+set(gcf, 'Position',  [50, 10, 1800, 500])
+%set(gcf, 'Position',  [950, 300, 900, 900])
+title('Steering','FontSize',14)
+xlabel('time [s]','FontSize',14)
+ylabel('Steering [rad]','FontSize',14)
+for j = 1:100
+    % Calculate psi2
+    psi2 = psi1 - deltaPsi1;
+    % Calculate r2
+    r2 = r1 + mt.tools.Rz(psi1,2)*[-l1c1;0] - mt.tools.Rz(psi2,2)*[l2c1;0];
     time = (j-1)*Ts;
-    if time < 4.5
-        delta_v(j) = delta_c*sin(2*pi*0.5*j*Ts);
+    if time < 1
+        delta_v(j) = 0;
+    elseif time < 3
+        delta_v(j) = delta_c*sin(2*pi*0.5*j*Ts - pi);
     else
-        delta_v(j) = delta_c;
+        delta_v(j) = 0;
     end
     % Plot car
     figure(1)
-    hold off;
-    mt.tools.plotCar(r,psi,param);
+    delete(h1)
+    delete(h2)
+    % hold off;
+    h1 = mt.tools.plotCar(r1,psi1,param_unit_one,'red');
+    % pause(1)
+    h2 = mt.tools.plotCar(r2,psi2,param_unit_two,'blue');
+    % pause(1)
+    trajectory_one = [trajectory_one r1];
+    trajectory_two = [trajectory_two r2];
+    plot(trajectory_one(1,:),trajectory_one(2,:),'Color','red');
+    plot(trajectory_two(1,:),trajectory_two(2,:),'Color','blue');
     hold on;
-    trajectory = [trajectory r];
-    plot(trajectory(1,:),trajectory(2,:));
-    xlim([-5 55])
-    ylim([-5 55])
-    xlabel('x-axis [m]','FontSize',14)
-    ylabel('y-axis [m]','FontSize',14)
-    title('Car Position : Constant longitudinal velocity','FontSize',14)
+    % Plot steering
     figure(2)
     plot(time,delta_v(j),'*')
-    title('Steering','FontSize',14)
-    xlabel('time [s]','FontSize',14)
-    ylabel('Steering [rad]','FontSize',14)
-    hold on
     % Calculate next state
     X_next = mt.tools.rk4(f,X_current,delta_v(j),Ts);
-    dr = mt.tools.Rz(psi,2)*[vx;X_next(1)];
-    d_psi = X_next(2);
-    r = dr*Ts + r;
-    psi = d_psi*Ts + psi; 
+    dr1 = mt.tools.Rz(psi1,2)*[vx1;X_next(1)];
+    d_psi1 = X_next(2);
+    d_deltaPsi1 = X_next(3);
+    r1 = dr1*Ts + r1;
+    psi1 = d_psi1*Ts + psi1;
+    deltaPsi1 = d_deltaPsi1*Ts + deltaPsi1;
     X_current = X_next;
     pause(0.2)
 end

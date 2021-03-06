@@ -2,14 +2,14 @@ function [dotX,A,B] = semitrailerLinearVxConstant(in1,delta11,vx1,in4)
 %SEMITRAILERLINEARVXCONSTANT Linear state-space equation of semi-trailer with constant longitudinal velocity. Linearize around (0,0)
 %    [DOTX,A,B] = SEMITRAILERLINEARVXCONSTANT(X,U,VX1,PARAMS)
 %   Inputs:
-%       X       : State vector = [vy1 d_psi1 d_deltaPsi1 psi1 deltaPsi1]
+%       X       : State vector = [vy1 d_psi1 d_deltaPsi1 psi1 deltaPsi1]'
 %                   vy1         : Car lateral velocity [m/s]
 %                   d_psi1      : Inclination angle rate of Unit 1 w.r.t x-axis of Frame {E}. Unit: [rad/s]
 %                   d_deltaPsi1 :  Angle rate between Unit 1 and Unit 2. Unit: [rad/s]
 %                   psi1        : Inclination angle rate of Unit 1 w.r.t x-axis of Frame {E}. Unit: [rad/s]
 %                   deltaPsi1   : Angle rate between Unit 1 and Unit 2. Unit: [rad]
 %                      
-%       U       : Input vector = [delta11 Fxw12]'
+%       U       : Input vector = [delta11]'
 %                   delta11     : Steering-angle. Unit: [rad]
 %       params  : Parameters = [Cy11 Cy12 Cy13 Cy21 Cy22 Cy23 l11 l12 l13 l21 l22 l23 l1c1 l2c1 m1 m2 J1 J2]'
 %                   Cyjk        : Cornering stiffness of unit j wheel k. Unit: [N]                  
@@ -18,7 +18,7 @@ function [dotX,A,B] = semitrailerLinearVxConstant(in1,delta11,vx1,in4)
 %                   mj          : Mass of vehicle unit j
 %                   Jj          : Inertia around z-axis of vehicle unit j. Unit: [Kg.m^2]
 %   Outputs:
-%       dotX    : Symbolic expression of dotX = dX/dt = [d_vx d_vy dd_psi]
+%       dotX    : Symbolic expression of dotX = dX/dt = [d_vy1 dd_psi1 dd_deltaPsi1 d_psi1 d_deltaPsi1]'
 %       A       : Matrix from linear expression dX/dt = A*X + B*U
 %       B       : Matrix from linear expression dX/dt = A*X + B*U
 %   Author : Julius D.

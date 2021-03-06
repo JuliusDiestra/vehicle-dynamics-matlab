@@ -2,7 +2,7 @@ function [dotX,A,B] = semitrailerLinear(in1,in2,in3)
 %SEMITRAILERLINEAR Linear state-space equation of semi-trailer dynamics. Linearize around (X0,U0) = (0,0)
 %    [DOTX,A,B] = SEMITRAILERLINEAR(X,U,PARAMS)
 %   Inputs:
-%       X       : State vector = [vx1 vy1 d_psi1 d_deltaPsi1 psi1 deltaPsi1]
+%       X       : State vector = [vx1 vy1 d_psi1 d_deltaPsi1 psi1 deltaPsi1]'
 %                   vx1         : Car longitudinal velocity [m/s]
 %                   vy1         : Car lateral velocity [m/s]
 %                   d_psi1      : Inclination angle rate of Unit 1 w.r.t x-axis of Frame {E}. Unit: [rad/s]
@@ -20,7 +20,7 @@ function [dotX,A,B] = semitrailerLinear(in1,in2,in3)
 %                   mj          : Mass of vehicle unit j
 %                   Jj          : Inertia around z-axis of vehicle unit j. Unit: [Kg.m^2]
 %   Outputs:
-%       dotX    : Symbolic expression of dotX = dX/dt = [d_vx d_vy dd_psi]
+%       dotX    : Symbolic expression of dotX = dX/dt = [d_vx1 d_vy1 dd_psi1 dd_deltaPsi1 d_psi1 d_deltaPsi1]'
 %       A       : Matrix from linear expression dX/dt = A*X + B*U
 %       B       : Matrix from linear expression dX/dt = A*X + B*U
 %   Author : Julius D.

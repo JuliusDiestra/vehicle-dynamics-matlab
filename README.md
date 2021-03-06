@@ -1,9 +1,11 @@
-# Vehicle dynamics using Matlab
+# Vehicle dynamics using Matlab: Stat-space models
 This project has the following structure:
 - +mt
 	- +ss
 	- +tools
 - sym-modeling
+- documentation
+- examples
 ## +mt
 This is the main folder library. In order to use this the user should include this line in his matlab script:
 
@@ -39,9 +41,21 @@ Scripts use for modeling. The idea is to use this function for modeling using Eu
 
 **solveddq :** Estimate the expression of the second derivative of the generalized coordinates (q) based on q, first derivative of q, Kinetic and Potential energy and generalized force of a system. 
 
+**rk4 :** Next discrete step calculation using Runge-Kutta 4 for state-stace equations.
+
+**wagon :** Calculation of wheels and borders position with respect of Reference or Earth Frame. Inputs: vehicle position, inclination and dimensions of vehicle.
+
+**plotCar :** Plotting minimalistic car shape.
+
 ## sym-modeling
 
 **car-modelling.m :** Car model using single axle bicycle model using Euler-Lagrange equation. Documentation: documentation/car-modelling/car-modelling.pdf
 
 **semitrailer-modelling.m :** Semitrailer model using single axle bicycle model using Euler-Lagrange equation. Documentation: documentation/semitrailer-modelling/semitrailer-modelling.pdf
+
+## Examples
+
+**plot_car_trajectory :** Example of plottting car using **carNonlinearVxConstant** state-space,**rk4**, **wagon** and **plotCar**. Steering input is constant.
+**plot_car_trajectory_2 :** Example of plottting car using **carNonlinearVxConstant** state-space, **rk4**,  **wagon** and **plotCar**. Steering input is sinusoidal and then constant.
+**plot_car_trajectory :** Example of plottting car using **semitrailerNonlinearVxConstant** state-space, **rk4**, **wagon** and **plotCar**. Steering is maneuver for lane change.
 
